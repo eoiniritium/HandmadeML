@@ -110,14 +110,9 @@ vector<vector<vector<double>>> calculateoutput(vector<vector<vector<double>>> mo
 
 int main(){
     vector<int> pixelvalue = read("images\\pixelvalues\\0.txt");
-   
-    //vector<int> pixelvalue = {5, 9, 6};
     vector<vector<vector<double>>> testmodel = generatemodel(pixelvalue.size(), 6, 6, 3);
-    
     testmodel = populateinputs(testmodel, pixelvalue);
-    
     testmodel = calculateoutput(testmodel);
-    
     printmodel(testmodel);
     
     //printmodel(generatemodel(pixelvalue.size(), 2, 3, 3));
