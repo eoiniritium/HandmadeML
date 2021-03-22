@@ -70,3 +70,7 @@ void printmodel(std::vector<std::vector<std::vector<double>>> input){
         std::cout << "\n" << std::endl; //Next layer
     }
 }
+
+double sigmoid(double x){
+    return 1 / (1 + exp(-x));
+}

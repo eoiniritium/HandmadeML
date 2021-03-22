@@ -17,7 +17,7 @@ using namespace std;
 
 //
 
-vector<vector<vector<double>>> generatemodel(int inputdimensions, int hiddenLayers, int hiddenLayerDimension, int outputLayerDimension){ //Generate model // Average node
+vector<vector<vector<double>>> generatemodel(int inputdimensions, int hiddenLayers, int hiddenLayerDimension, int outputLayerDimension, double rndmin, double rndmax){ //Generate model // Average node
     //Clear Vector: [vectorname].clear();
 
     vector<vector<vector<double>>> out; //Top layer
@@ -109,11 +109,21 @@ vector<vector<vector<double>>> calculateoutput(vector<vector<vector<double>>> mo
 }
 
 int main(){
+    /*
     vector<int> pixelvalue = read("images\\pixelvalues\\0.txt");
-    vector<vector<vector<double>>> testmodel = generatemodel(pixelvalue.size(), 6, 6, 3);
+    vector<vector<vector<double>>> testmodel = generatemodel(pixelvalue.size(), 6, 6, 3, 0.2, 1);
     testmodel = populateinputs(testmodel, pixelvalue);
     testmodel = calculateoutput(testmodel);
     printmodel(testmodel);
+    */
+
+    vector<int> inputs = {255, 0};
+    vector<vector<vector<double>>> model = generatemodel(inputs.size(), 2, 3, 2, 0.2, 1);
+    model = populateinputs(model, inputs);
+    model = calculateoutput(model);
+    printmodel(model);
+
+    //cout << sigmoid(0);
     
     //printmodel(generatemodel(pixelvalue.size(), 2, 3, 3));
     
