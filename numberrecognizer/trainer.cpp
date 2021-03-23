@@ -82,12 +82,23 @@ vector<vector<vector<double>>> generatemodel(int inputdimensions, int hiddenLaye
 }
 
 vector<vector<vector<double>>> populateinputs(vector<vector<vector<double>>> model, vector<int> pxVal){
-    vector<vector<vector<double>>> m = model;
-    for(int i = 0; i < m[0].size(); i++){
-        m[0][i][0] = pxVal[i];
-    }
+    vector<vector<vector<double>>> out;
+    vector<vector<double>> nodes;
+    vector<double> weight;
+    for(int node = 0; node < model[0].size(); node++){
+        weight.clear();
 
-    return m;
+        weight.push_back(pxVal[node]);
+        for(int weights = 1; weights < model[0][node].size(); weights++){
+            weight.push_back(model[0][node][weights]);
+        }
+        nodes.push_back(weight);
+    }
+    out.push_back(nodes);
+    for(int layer = 1; layer < model.size(); layer++){
+        out.push_back(model[layer]);
+    }
+    return out;
 }
 
 vector<vector<vector<double>>> calculateoutput(vector<vector<vector<double>>> model){ //Average
@@ -97,29 +108,35 @@ vector<vector<vector<double>>> calculateoutput(vector<vector<vector<double>>> mo
         vector<vector<double>> prevlayerdata = out[layer - 1];
         for(int node = 0; node < layerdata.size(); node++){
             double sum = 0;
-            int count = 0;
             for(int prevln = 0; prevln < prevlayerdata.size(); prevln++){
                 sum += prevlayerdata[prevln][0] * prevlayerdata[prevln][node + 1];
-                count++;
             }
-            out[layer][node][0] = sigmoid(sum / count);
+            out[layer][node][0] = sigmoid(sum);
         }
     }
     return out;
 }
 
-vector<vector<vector<double>>> mutate(vector<vector<vector<double>>> input, double threshold, double rndmax){
+vector<vector<vector<double>>> mutate(vector<vector<vector<double>>> input, double threshold, double rndmax, double newlower, double newupper){
     vector<vector<vector<double>>> out;
-    for(int layer = 0; layer < input.size(); layer++){
-        for(int node = 0; node < input[layer].size(); node++){
-            for(int weights = 1; weights < input[layer][node].size() - 1; weights++){
-                double a = randomnum(0, threshold);
-                if(a >= threshold){
-                    double newnum = randomnum(0, rndmax);
-                    out[layer][node][weights] = newnum;
+    vector<vector<double>> layerd;
+    vector<double> nodesd;
+    for(int layer = 1; input.size(); layer++){
+        layerd.clear();
+        for(int nodes = 0; nodes < input[layer].size(); nodes++){
+            nodesd.clear();
+            
+            nodesd.push_back(input[layer][nodes][0]);
+            for(int weights = 1; weights < input[layer][nodes].size(); weights++){
+                if(randomnum(0, rndmax) >= threshold){
+                    nodesd.push_back(randomnum(newlower, newupper));
+                } else {
+                    nodesd.push_back(input[layer][nodes][weights]);
                 }
-            }    
+            }
+            layerd.push_back(nodesd);
         }
+        out.push_back(layerd);
     }
     return out;
 }
@@ -130,12 +147,11 @@ int main(){
     vector<vector<vector<double>>> testmodel = generatemodel(pixelvalue.size(), 6, 6, 3, 0, 0.5);
     testmodel = populateinputs(testmodel, pixelvalue);
     testmodel = calculateoutput(testmodel);
-    //printmodel(testmodel);
-    cout << "Work 1" << endl;
-    testmodel = mutate(testmodel, 0.6, 0.5);
-    cout << "Work 2" << endl;
     printmodel(testmodel);
-    cout << "Work 3" << endl;
+    cout << "test";
+    testmodel = mutate(testmodel, 0.25, 0.6, 0.2, 0.6);
+    cout << "test";
+    printmodel(testmodel);
     
     //EXIT
     return 0;
